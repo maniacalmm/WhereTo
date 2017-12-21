@@ -5,6 +5,7 @@ var tokyo_station = {title: 'tokyo station', position: {lat: 35.6811673, lng: 13
 var shinagawa_station = {title: 'shinagawa_station', position: {lat: 35.6284713, lng: 139.7365656}};
 
 var places = [akiba, tokyo_station, shinagawa_station];
+var location_list = [];
 var markers = [];
 var largeInfowindow;
 
@@ -76,11 +77,8 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
         res_obj.response.venues.forEach(function(place) {
         	let index = place.name.indexOf('(');
         	console.log(place.name.substring(0, index));
-            ko_obs_array.push(new spot(place.location.lat, 
-            						   place.location.lng, 
-            						   place.name.substring(0, place.name.indexOf('(')), 
-            						   place.name.substring(place.name.indexOf('(')),
-            						   place.url));
+        	location_list.push(new spot(place));
+            ko_obs_array.push(new spot(place));
         });
     })
     .catch(function(error) {
@@ -88,12 +86,15 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
     });
 }
 
-function spot(lat, lng, name_1, name_2, category, url) {
-    this.lat = lat;
-    this.lng = lng;
-    this.name_1 = name_1;
-    this.name_2 = name_2;
-    this.url = url;
+function spot(place) {
+    this.lat = place.location.lat;
+    this.lng = place.location.lng;
+    this.name_1 = place.name.substring(0, place.name.indexOf('('));
+    this.name_2 = place.name.substring(place.name.indexOf('('));
+    this.search_name = this.name_1 === '' ? this.name_2.toLowerCase() : this.name_1.toLowerCase();
+    this.url = place.url;
+    this.address = place.location.address;
+    this.phone = place.contact.phone;
 }
 
 
@@ -119,13 +120,15 @@ function view_model() {
 
     self.selected_category = ko.observable();
 
-
     self.sel_cat_name = ko.computed(function() {
         return self.selected_category() == undefined ?
                             '' : self.selected_category().category_name;
     }, self);
 
     self.apply_filter = function() {
+    	let filtered_list = location_list.filter(obj => obj.search_name.startsWith(self.input()));
+    	console.log(filtered_list);
+    	self.list_view(filtered_list);
     };
 
     self.apply_category = function() {
@@ -138,6 +141,11 @@ function view_model() {
 
 }
 
+/* --- HIDE button Jquery Hard-coded ------------*/
+$('#fold_view_list_btn').on('click', function() {
+	console.log('something');
+	$('#view_list').toggleClass('hide');
+});
 var VM = new view_model();
 
 ko.applyBindings(VM);
