@@ -1,14 +1,10 @@
-var map;
+var map;  // map variable
 
-var akiba = {title: 'akihabara', position: {lat: 35.7022077, lng: 139.7722649}};
-var tokyo_station = {title: 'tokyo station', position: {lat: 35.6811673, lng: 139.7648575}};
-var shinagawa_station = {title: 'shinagawa_station', position: {lat: 35.6284713, lng: 139.7365656}};
+var location_list = []; // locations list from API query
+var markers = [];      // markers list
+var largeInfowindow;   // popup window
 
-var places = [akiba, tokyo_station, shinagawa_station];
-var location_list = [];
-var markers = [];
-var largeInfowindow;
-
+/*-------------- API ID ------------*/
 var fourSqureID = "MDWWWT2K41IZ4MFE44GS10UMIO1LP1XLPXXL2O00ME2LMQSQ";
 var fourSqureSecret = "SSXUSJE3EXP4YIJHVDCJKDPCHY5445FX4XV1P3IO5HGZAAJ4";
 
@@ -60,6 +56,8 @@ function populateInfoWindow(marker, infowindow, map) {
 
 /*------------------------------- Map related methods end ---------------------------------- */
 
+
+// fetch from foursquare API
 function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b7104d754a06370d81259', ko_obs_array=VM.list_view) {
     var req_link = `https://api.foursquare.com/v2/venues/search?${request}=${value}&categoryId=${categoryId}&client_id=${fourSqureID}&client_secret=${fourSqureSecret}&v=20171212`
     ko_obs_array.removeAll();
@@ -70,12 +68,14 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
         return response.json();
     })
     .then(function(res_obj) {
+        // populate the location list and ko list
         res_obj.response.venues.forEach(function(place) {
         	let new_spot = new spot(place);
         	location_list.push(new_spot);
             ko_obs_array.push(new_spot);
         });
 
+        // create markers
         create_marker(location_list, map)
     })
     .catch(function(error) {
@@ -84,6 +84,7 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
     });
 }
 
+// spot class
 function spot(place) {
     this.lat = place.location.lat;
     this.lng = place.location.lng;
@@ -95,12 +96,13 @@ function spot(place) {
     this.phone = place.contact.phone;
 }
 
-
+// top ViewModel
 function view_model() {
     // after loaded, initialize maybe
 
     var self = this;
 
+    // entire category from fourSquare API
     self.categories = [
         {category_name : 'Arts & Entertainment', category_id : '4d4b7104d754a06370d81259'},
         {category_name : 'College & University' , category_id : '4d4b7105d754a06372d81259'},
@@ -112,16 +114,17 @@ function view_model() {
     ];
 
 
-    self.input = ko.observable();
+    self.input = ko.observable(); // input
 
-    self.list_view = ko.observableArray();
+    self.list_view = ko.observableArray(); // location lists
 
-    self.selected_category = ko.observable();
+    self.selected_category = ko.observable(); // category selected
 
+    // filtering result from input
     self.apply_filter = function() {
-        console.log(self.input());
     	let filtered_list = location_list.filter(obj => obj.search_name.startsWith(self.input()));
 
+        // select marker visibility
         location_list.forEach(function(place) {
             if(!place.search_name.startsWith(self.input())) {
                 place.marker.setMap(null);
@@ -133,6 +136,7 @@ function view_model() {
     	self.list_view(filtered_list);
     };
 
+    // fetching API info from selected category
     self.apply_category = function() {
     	let latlng = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
         foursquare_fetch('ll',
@@ -145,13 +149,6 @@ function view_model() {
         populateInfoWindow(this.marker, largeInfowindow, map)
     }
 
-}
-
-function list_view_model() {
-	var self = this;
-	self.show_info_window = function() {
-		console.log('something you want to say');
-	}
 }
 
 var VM = new view_model();
