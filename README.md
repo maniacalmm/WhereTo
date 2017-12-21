@@ -18,7 +18,7 @@ git clone https://github.com/maniacalmm/WhereTo.git
 
 3, you can choose different category by using the dropdown menu, after you made a decision, click apply to get the recommended locations.
 
-4, left sidebar feathering all the locations' name, you can click any of them to trigger a popup window on the markers representing the location on the map as well. popup window has address and phone number of the location
+4, left sidebar feathering all the locations' name, by clicking any of them, corresponding markers on the map will bounce and display more detailed info, you can click the bouncing marker to make it stop.
 
 5, you can also hide the sidebar by clicking the HIDE/SHOW button or the little arrow button.
 

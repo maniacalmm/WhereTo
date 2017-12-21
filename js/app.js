@@ -37,6 +37,14 @@ function create_marker(places, map) {
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow, map);
         });
+
+        marker.addListener('click', function() {
+            if (marker.getAnimation() !== null) {
+              marker.setAnimation(null);
+            } else {
+              marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        })
     });
 }
 
@@ -146,6 +154,7 @@ function view_model() {
     };
 
     self.show_info_window = function() {
+        this.marker.setAnimation(google.maps.Animation.BOUNCE);
         populateInfoWindow(this.marker, largeInfowindow, map)
     }
 
