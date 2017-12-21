@@ -1,9 +1,73 @@
-html, body {
- height: 100%; 
- margin: 10px; 
- padding: 0; 
+html, body, #top{
+ height: 100%;
+ margin: 3px;
+ padding: 5;
+}
+
+#input_bar, #category_bar {
+    width: 200px;
+    height: 30px;
+    border-style: solid;
+    border-color: #c3cddd;
+    border-radius: 5px;
+    font-family:  'Source Sans Pro', sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+#apply_btn {
+    background-color: #2c2c2d;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: white;
+    font-size: 15px;
+    font-weight: 8pt;
+    width: 50px;
+    height: 30px
+}
+
+#view_list {
+    position: fixed;
+	min-width: 200px;
+    height: 100%; /* this is important */
+    float: left;
+	width: 30%;
+    overflow-y: auto;
+    font-family: 'Source Sans Pro', sans-serif;
+
+}
+
+#list {
+    width: 100%
+}
+
+.list_item {
+    border-top: solid 3px;
+    border-color: #c3cddd;
+    background-color: #2c2c2d;
+    color : white;
+    font-size: 17px;
+    font-weight: 8pt;
+    padding: 5%;
+    width: 100%;
+}
+
+.list_item:hover {
+    background-color: #8d9bb2;
+}
+
+#location_list {
+    overflow-y: auto;
+}
+
+#map_view {
+    float: right;
+ 	height: 95%;
+ 	width: 70%;
 }
 
 #map {
- height: 100%; 
+    border: solid black 5px;
+    border-radius: 5px;
+    height: 95%;
+    width: 100%;
 }

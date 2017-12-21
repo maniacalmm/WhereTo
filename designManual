@@ -1,0 +1,9 @@
+for the dropdown menu, add an apply for search (search with lng and lat, and radius)
+
+use lng and lat, so we can search the world, and current query window
+
+find how to get current map center & radius, and query foursqure with these parameter
+
+1, click dropdown list to pick category -> query the result -> populate the view_list, and produce marker for the map
+2, input filter -> search the view_list, show filtered result & marker
+

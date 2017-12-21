@@ -4,10 +4,36 @@
 	<title>Where to?</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 </head>
 <body>
-	<div id="map"></div>
+	<div id="top">
+        <div id="view_list">
+            <input id='input_bar' data-bind="textInput: input, event: {keyup: apply_filter}">
+            <div id="list" data-bind="foreach: list_view">
+                <div class='list_item'>
+                    <div data-bind="text: name_1"></div>
+                    <div data-bind="text: name_2"></div>
+                </div>
+            </div>
+        </div>
+		<div id="map_view">
+            <div id="category">
+                <select id="category_bar" data-bind="options: categories, value: selected_category, optionsText: 'category_name'">
+                </select>
+
+                <input id="apply_btn" type="button" value="Apply" data-bind="event: {click: apply_category}">
+            </div>
+            <div id="map"></div>
+        </div>
+	</div>
+
+    <!-- js files -->
+    <script src="js/lib/jquery-3.2.1.min.js"></script>
+    <script src="js/lib/knockout-3.4.2.js"></script>
 	<script src="js/app.js"></script>
+
+    <!-- GoogleMap API -->
    	<script async defer
     	 src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyA5bRCynFnGd3g50DS_C2A1jEDvdesP_5U&callback=initMap">
    	</script>
