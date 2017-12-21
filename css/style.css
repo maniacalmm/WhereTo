@@ -2,6 +2,7 @@ html, body{
     height: 100%;
     font-family:  'Source Sans Pro', sans-serif;
     white-space: nowrap;
+    background-color: #daddce;
 }
 
 #top {
@@ -19,7 +20,7 @@ html, body{
     font-weight: normal;
 }
 
-#apply_btn, #fold_view_list_btn {
+#apply_btn, #fold_view_list_btn, #fold_view_list_btn_small {
     background-color: #2c2c2d;
     font-family: 'Source Sans Pro', sans-serif;
     color: white;
@@ -28,6 +29,18 @@ html, body{
     width: 50px;
     height: 30px
 }
+
+#fold_view_list_btn_small {
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#fold_view_list_btn {
+    width: 100px;
+}
+
+
 
 
 /*-------------- view list block --------------*/
@@ -44,7 +57,7 @@ html, body{
 #list {
     width: 100%
     height: 100%; /* this is important */
-    font-family: 'Source Sans Pro', sans-serif; 
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .list_item {
@@ -62,8 +75,6 @@ html, body{
     background-color: #8d9bb2;
 }
 
-
-
 .hide {
     display: none;
 }
@@ -71,7 +82,7 @@ html, body{
 /*-------------- map block --------------*/
 
 #map_view {
- 	height: 100%;
+ 	height: 90%;
  	width: auto;
 }
 
@@ -88,3 +99,7 @@ html, body{
     background-color: #F5F5F5;
 }
 
+/*-------------responsive--------------*/
+@media (max-width: 500px) {
+
+}

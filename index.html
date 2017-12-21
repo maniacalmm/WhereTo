@@ -8,11 +8,12 @@
 </head>
 <body>
 	<div id="top">
-        
+
         <div id="view_list">
             <input id='input_bar' data-bind="textInput: input, event: {keyup: apply_filter}">
+            <button id='fold_view_list_btn_small'>&#8592</button>
             <div id="list" data-bind="foreach: list_view">
-                <div class='list_item'>
+                <div class='list_item' data-bind='click: $root.show_info_window'>
                     <div data-bind="text: name_1"></div>
                     <div data-bind="text: name_2"></div>
                 </div>
@@ -25,8 +26,8 @@
                 <select id="category_bar" data-bind="options: categories, value: selected_category, optionsText: 'category_name'">
                 </select>
 
-                <input id="apply_btn" type="button" value="Apply" data-bind="event: {click: apply_category}">
-                <button id='fold_view_list_btn'>HIDE</button>
+                <input id="apply_btn" type="button" value="Apply" data-bind="click: apply_category">
+                <button id='fold_view_list_btn'>HIDE/SHOW</button>
             </div>
             <div id="map"></div>
         </div>

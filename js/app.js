@@ -21,22 +21,22 @@ function initMap() {
     });
 
     largeInfowindow = new google.maps.InfoWindow();
-    create_marker(places, map);
-    google.maps.event.addListener(map, 'click', function(event) {
-      console.log(event.latLng.lat() + " " + event.latLng.lng());
-    });
     foursquare_fetch();
 }
 
 function create_marker(places, map) {
-    places.forEach(function(place, index) {
+    markers.forEach(function(marker) {
+        marker.setMap(null);
+    });
+    markers = [];
+    places.forEach(function(place) {
         let marker = new google.maps.Marker({
             map: map,
-            position: place.position,
-            title: place.title,
+            position: {lat: place.lat, lng: place.lng},
             animation: google.maps.Animation.DROP,
-            id: index
+            content: place.name_1 + place.name_2 + " : " + place.address + 'TEL:'+place.phone
         });
+        place.marker = marker; // rebind the marker to every place
         markers.push(marker);
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow, map);
@@ -46,9 +46,10 @@ function create_marker(places, map) {
 
 
 function populateInfoWindow(marker, infowindow, map) {
+    console.log(marker);
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent(marker.title);
+        infowindow.setContent(marker.content);
         infowindow.open(map, marker);
         infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
@@ -59,29 +60,26 @@ function populateInfoWindow(marker, infowindow, map) {
 
 /*------------------------------- Map related methods end ---------------------------------- */
 
-function test_input(input) {
-    console.log(input);
-}
-
-
 function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b7104d754a06370d81259', ko_obs_array=VM.list_view) {
     var req_link = `https://api.foursquare.com/v2/venues/search?${request}=${value}&categoryId=${categoryId}&client_id=${fourSqureID}&client_secret=${fourSqureSecret}&v=20171212`
     ko_obs_array.removeAll();
+    location_list = [];
+
     fetch(req_link)
     .then(function(response) {
         return response.json();
     })
     .then(function(res_obj) {
-        console.log(res_obj);
-        let locations = [] // a set of places find given the coordinates
         res_obj.response.venues.forEach(function(place) {
-        	let index = place.name.indexOf('(');
-        	console.log(place.name.substring(0, index));
-        	location_list.push(new spot(place));
-            ko_obs_array.push(new spot(place));
+        	let new_spot = new spot(place);
+        	location_list.push(new_spot);
+            ko_obs_array.push(new_spot);
         });
+
+        create_marker(location_list, map)
     })
     .catch(function(error) {
+    	console.log(Error(error).stack);
         alert('something is not working, reload again :(');
     });
 }
@@ -120,14 +118,18 @@ function view_model() {
 
     self.selected_category = ko.observable();
 
-    self.sel_cat_name = ko.computed(function() {
-        return self.selected_category() == undefined ?
-                            '' : self.selected_category().category_name;
-    }, self);
-
     self.apply_filter = function() {
+        console.log(self.input());
     	let filtered_list = location_list.filter(obj => obj.search_name.startsWith(self.input()));
-    	console.log(filtered_list);
+
+        location_list.forEach(function(place) {
+            if(!place.search_name.startsWith(self.input())) {
+                place.marker.setMap(null);
+            } else {
+                place.marker.setMap(map);
+            }
+        });
+
     	self.list_view(filtered_list);
     };
 
@@ -139,15 +141,41 @@ function view_model() {
                             self.list_view);
     };
 
+    self.show_info_window = function() {
+        populateInfoWindow(this.marker, largeInfowindow, map)
+    }
+
 }
 
-/* --- HIDE button Jquery Hard-coded ------------*/
-$('#fold_view_list_btn').on('click', function() {
-	console.log('something');
-	$('#view_list').toggleClass('hide');
-});
+function list_view_model() {
+	var self = this;
+	self.show_info_window = function() {
+		console.log('something you want to say');
+	}
+}
+
 var VM = new view_model();
 
 ko.applyBindings(VM);
+
+/* --- HIDE button Jquery Hard-coded ------------*/
+$('#fold_view_list_btn').on('click', function() {
+	$('#view_list').toggleClass('hide');
+});
+
+
+$('#fold_view_list_btn_small').on('click', function() {
+	$('#view_list').toggleClass('hide');
+});
+
+/* ----- when window get's too small hide the side bar ---*/
+$(window).resize(function() {
+	if ($(window).width() < 650) {
+		$('#view_list').addClass('hide');
+	} else {
+		$('#view_list').removeClass('hide');
+	}
+});
+
 
 
