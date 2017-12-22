@@ -52,6 +52,9 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
 
             new_spot.marker.addListener('click', function() {
                 toggleBounce(this);
+                // use closure to bind marker with spot together
+                new_spot.show(!new_spot.show());
+                close_others(new_spot);
             });
 
         	location_list.push(new_spot);
@@ -66,6 +69,7 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
 
 // spot class
 function spot(place) {
+	var that = this;
     this.lat = place.location.lat;
     this.lng = place.location.lng;
     this.name_1 = place.name.substring(0, place.name.indexOf('('));
@@ -124,18 +128,35 @@ function view_model() {
     // fetching API info from selected category
     self.apply_category = function() {
     	let latlng = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
+        location_list.forEach(function(place) {
+        	place.marker.setMap(null);
+        });
+        
         foursquare_fetch('ll',
                            latlng.lat() + ',' + latlng.lng(),
                             self.selected_category().category_id,
                             self.list_view);
+                            
     };
 
     self.show_info_window = function() {
         toggleBounce(this.marker);
-
         this.show(!this.show());
+
+        // closing others
+        close_others(this);
     }
 
+}
+
+// close other info windows as well as stop other marker from bouncing
+function close_others(spot) {
+	location_list.forEach(function(place) {
+		if(place !== spot) {
+    		place.show(false);
+   			place.marker.setAnimation(null);
+   		}
+   	}); 
 }
 
 function toggleBounce(marker) {
@@ -172,6 +193,9 @@ $(window).resize(function() {
 		$('#view_list').removeClass('hide');
 	}
 });
-
+/* ------ handle google error ------------*/
+function googleError() {
+	alert("Bad google API connection, check again later :(");
+}
 
 

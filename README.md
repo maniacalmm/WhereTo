@@ -28,5 +28,7 @@ git clone https://github.com/maniacalmm/WhereTo.git
 
 8, directly click the marker will also trigger the popup window
 
+9, list item and marker on the map are bidirectionally binded, click one will trigger the other, and there will only be one 'actived' spot at any given time
+
 
 ## Have fun :)
