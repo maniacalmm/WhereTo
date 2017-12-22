@@ -9,7 +9,7 @@
 <body>
 	<div id="top">
 
-        <div id="view_list">
+        <aside id="view_list">
             <input id='input_bar' data-bind="textInput: input, event: {keyup: apply_filter}">
             <button id='fold_view_list_btn_small'>&#8592</button>
             <div id="list" data-bind="foreach: list_view">
@@ -22,10 +22,10 @@
                     <div data-bind="text: hereNow"></div>
                 </div>
             </div>
-        </div>
+        </aside>
 
 
-		<div id="map_view">
+		<main id="map_view">
             <div id="category">
                 <select id="category_bar" data-bind="options: categories, value: selected_category, optionsText: 'category_name'">
                 </select>
@@ -34,7 +34,7 @@
                 <button id='fold_view_list_btn'>HIDE/SHOW</button>
             </div>
             <div id="map"></div>
-        </div>
+        </main>
 	</div>
 
     <!-- js files -->
