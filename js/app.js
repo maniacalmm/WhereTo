@@ -47,7 +47,6 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
     })
     .then(function(res_obj) {
         // populate the location list and ko list
-        console.log(res_obj);
         res_obj.response.venues.forEach(function(place) {
         	let new_spot = new spot(place);
 
@@ -140,8 +139,6 @@ function view_model() {
 }
 
 function toggleBounce(marker) {
-    console.log('you tried');
-    console.log(marker);
     if (marker.getAnimation() == google.maps.Animation.DROP) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         populateInfoWindow(marker, largeInfowindow, map)

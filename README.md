@@ -18,7 +18,7 @@ git clone https://github.com/maniacalmm/WhereTo.git
 
 3, you can choose different category by using the dropdown menu, after you made a decision, click apply to get the recommended locations.
 
-4, left sidebar feathering all the locations' name, by clicking any of them, corresponding markers on the map will bounce and display more detailed info, you can click the bouncing marker to make it stop.
+4, left sidebar feathering all the locations' name, by clicking any of them, corresponding markers on the map will bounce and display more detailed info, you can click again to make the bouncing stop, and corresponding info will show below the item list in red block.
 
 5, you can also hide the sidebar by clicking the HIDE/SHOW button or the little arrow button.
 
@@ -27,5 +27,6 @@ git clone https://github.com/maniacalmm/WhereTo.git
 7,this app works globally, it always try to get the venues based on your current browsing location
 
 8, directly click the marker will also trigger the popup window
+
 
 ## Have fun :)
