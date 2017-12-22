@@ -50,7 +50,6 @@ function create_marker(places, map) {
 
 
 function populateInfoWindow(marker, infowindow, map) {
-    console.log(marker);
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
         infowindow.setContent(marker.content);
@@ -77,6 +76,7 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
     })
     .then(function(res_obj) {
         // populate the location list and ko list
+        console.log(res_obj);
         res_obj.response.venues.forEach(function(place) {
         	let new_spot = new spot(place);
         	location_list.push(new_spot);
@@ -102,6 +102,8 @@ function spot(place) {
     this.url = place.url;
     this.address = place.location.address;
     this.phone = place.contact.phone;
+    this.show = ko.observable(false);
+    this.unique_info = place.location.address + ' (' + place.hereNow.summary + ')';
 }
 
 // top ViewModel
@@ -154,8 +156,14 @@ function view_model() {
     };
 
     self.show_info_window = function() {
-        this.marker.setAnimation(google.maps.Animation.BOUNCE);
-        populateInfoWindow(this.marker, largeInfowindow, map)
+        if (this.marker.getAnimation() !== null) {
+            this.marker.setAnimation(null);
+        } else {
+            this.marker.setAnimation(google.maps.Animation.BOUNCE);
+            populateInfoWindow(this.marker, largeInfowindow, map)
+        }
+
+        this.show(!this.show());
     }
 
 }

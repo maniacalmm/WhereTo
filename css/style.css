@@ -79,6 +79,14 @@ html, body{
     display: none;
 }
 
+.info_window {
+    background-color: #820625;
+    color : white;
+    font-size: 17px;
+    font-weight: 8pt;
+    padding: 5%;
+}
+
 /*-------------- map block --------------*/
 
 #map_view {
