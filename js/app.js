@@ -198,4 +198,6 @@ function googleError() {
 	alert("Bad google API connection, check again later :(");
 }
 
-
+function loadedTest() {
+	console.log('GOOGLE API loaded! yay!');
+}
