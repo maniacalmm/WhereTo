@@ -1,7 +1,6 @@
 var map;  // map variable
 
 var location_list = []; // locations list from API query
-var markers = [];      // markers list
 var largeInfowindow;   // popup window
 
 /*-------------- API ID ------------*/
@@ -18,34 +17,6 @@ function initMap() {
 
     largeInfowindow = new google.maps.InfoWindow();
     foursquare_fetch();
-}
-
-function create_marker(places, map) {
-    markers.forEach(function(marker) {
-        marker.setMap(null);
-    });
-    markers = [];
-    places.forEach(function(place) {
-        let marker = new google.maps.Marker({
-            map: map,
-            position: {lat: place.lat, lng: place.lng},
-            animation: google.maps.Animation.DROP,
-            content: place.name_1 + place.name_2 + " : " + place.address + 'TEL:'+place.phone
-        });
-        place.marker = marker; // rebind the marker to every place
-        markers.push(marker);
-        marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfowindow, map);
-        });
-
-        marker.addListener('click', function() {
-            if (marker.getAnimation() !== null) {
-              marker.setAnimation(null);
-            } else {
-              marker.setAnimation(google.maps.Animation.BOUNCE);
-            }
-        })
-    });
 }
 
 
@@ -79,12 +50,14 @@ function foursquare_fetch(request = 'near', value = 'tokyo,JP', categoryId='4d4b
         console.log(res_obj);
         res_obj.response.venues.forEach(function(place) {
         	let new_spot = new spot(place);
+
+            new_spot.marker.addListener('click', function() {
+                toggleBounce(this);
+            });
+
         	location_list.push(new_spot);
             ko_obs_array.push(new_spot);
         });
-
-        // create markers
-        create_marker(location_list, map)
     })
     .catch(function(error) {
     	console.log(Error(error).stack);
@@ -104,6 +77,12 @@ function spot(place) {
     this.phone = place.contact.phone;
     this.show = ko.observable(false);
     this.hereNow = place.hereNow.summary;
+    this.marker = new google.maps.Marker({
+            map: map,
+            position: {lat: this.lat, lng: this.lng},
+            animation: google.maps.Animation.DROP,
+            content: this.name_1 + this.name_2 + " : " + this.address + 'TEL:'+ this.phone
+        });
 }
 
 // top ViewModel
@@ -153,20 +132,25 @@ function view_model() {
     };
 
     self.show_info_window = function() {
-        if (this.marker.getAnimation() == google.maps.Animation.DROP) {
-            this.marker.setAnimation(google.maps.Animation.BOUNCE);
-            populateInfoWindow(this.marker, largeInfowindow, map)
-        }
-        else if (this.marker.getAnimation() !== null) {
-            this.marker.setAnimation(null);
-        } else {
-            this.marker.setAnimation(google.maps.Animation.BOUNCE);
-            populateInfoWindow(this.marker, largeInfowindow, map)
-        }
+        toggleBounce(this.marker);
 
         this.show(!this.show());
     }
 
+}
+
+function toggleBounce(marker) {
+    console.log('you tried');
+    console.log(marker);
+    if (marker.getAnimation() == google.maps.Animation.DROP) {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        populateInfoWindow(marker, largeInfowindow, map)
+    } else if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        populateInfoWindow(marker, largeInfowindow, map)
+    }
 }
 
 var VM = new view_model();
