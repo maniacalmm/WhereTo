@@ -103,7 +103,7 @@ function spot(place) {
     this.address = place.location.address;
     this.phone = place.contact.phone;
     this.show = ko.observable(false);
-    this.unique_info = place.location.address + ' (' + place.hereNow.summary + ')';
+    this.hereNow = place.hereNow.summary;
 }
 
 // top ViewModel
@@ -136,11 +136,8 @@ function view_model() {
 
         // select marker visibility
         location_list.forEach(function(place) {
-            if(!place.search_name.startsWith(self.input())) {
-                place.marker.setMap(null);
-            } else {
-                place.marker.setMap(map);
-            }
+            var match = place.search_name.startsWith(self.input());
+            place.marker.setVisible(match);
         });
 
     	self.list_view(filtered_list);
@@ -156,7 +153,11 @@ function view_model() {
     };
 
     self.show_info_window = function() {
-        if (this.marker.getAnimation() !== null) {
+        if (this.marker.getAnimation() == google.maps.Animation.DROP) {
+            this.marker.setAnimation(google.maps.Animation.BOUNCE);
+            populateInfoWindow(this.marker, largeInfowindow, map)
+        }
+        else if (this.marker.getAnimation() !== null) {
             this.marker.setAnimation(null);
         } else {
             this.marker.setAnimation(google.maps.Animation.BOUNCE);
